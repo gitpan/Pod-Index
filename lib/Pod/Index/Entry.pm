@@ -1,7 +1,7 @@
 package Pod::Index::Entry;
 
 use 5.008;
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 use strict;
 use warnings;
@@ -18,6 +18,7 @@ sub new {
 sub podname  { shift->{podname}  }
 sub line     { shift->{line}     }
 sub filename { shift->{filename} }
+sub context  { shift->{context} }
 
 sub pod {
     my ($self) = @_;
@@ -51,20 +52,26 @@ Pod::Index::Entry - Represents Pod search result
     use Pod::Index::Entry;
 
     my $entry =  Pod::Index::Entry->new(
-        podname  => 'perlobj.pod'
+        podname  => 'perlobj'
         line     => 42,
         filename => '/usr/lib/perl5/5.8.7/pod/perlobj.pod',
+        context  => 'Using POD',
     );
 
     # trivial accessors
     my $podname  = $entry->podname;
     my $filename = $entry->filename;
     my $line     = $entry->line;
+    my $context  = $entry->context;
 
     # extract the POD for this entry
     my $pod      = $entry->pod;
 
 =head1 DESCRIPTION
+
+This class represents a POD index entry. An entry is defined by the
+podname/filename, line number, and context. The entry object also has the 
+ability to extract the POD "scope" from the filename.
 
 =head1 METHODS
 
@@ -80,15 +87,19 @@ Create a new search object. Possible arguments are:
 
 =item podname
 
-The name of the pod, as a path relative to an @INC directory.
+The name of the pod, such as X<Data::Dumper>.
 
 =item filename
 
-The filename for the pod.
+The filename for the pod, such as F<Data/Dumper.pm>.
 
 =item line
 
 The line number where the scope of this entry begins.
+
+=item context
+
+The title of the section that contains this entry.
 
 =back
 
@@ -98,15 +109,22 @@ The line number where the scope of this entry begins.
 
 =item line
 
+=item context
+
 These are just simple accessors that return the value of these properties,
 as given to the constructor.
 
 =item pod
 
-Extracts the POD for the scope of the entry from $self->filename, beginning
-at $self->line.
+Extracts the POD for the scope of the entry from $self->filename, beginning at
+$self->line. For a definition of I<scope>, see L<Pod::Index>. The POD
+extraction is delegated to the L<Pod::Extract> module.
 
 =back
+
+=head1 VERSION
+
+0.11
 
 =head1 SEE ALSO
 

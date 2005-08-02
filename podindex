@@ -1,4 +1,4 @@
-#!/home/ivan/bin/perl
+#!/usr/bin/perl
 
 use strict;
 use warnings;
@@ -23,7 +23,12 @@ if ($version) {
 
 my $p = Pod::Index::Builder->new;
 
-for my $file (@ARGV) {
+my @files = @ARGV;
+if ($^O eq 'MSWin32') { # do our own globbing under Windows
+    @files = map glob, @files;
+}
+
+for my $file (@files) {
     $p->parse_from_file($file);
 }
 

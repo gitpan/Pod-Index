@@ -1,11 +1,14 @@
-ballon, floating	t/test.pod:50
-deuterium	t/test.pod:26
-head2	t/test.pod:59
-helium	t/test.pod:50
-hydrogen	t/test.pod:26
-protium	t/test.pod:26
-random	t/test.pod:14
-random	t/test.pod:50
-synopsis	t/test.pod:5
-tritium	t/test.pod:26
-verbatim	t/test.pod:17
+balloon	t::test	61	DESCRIPTION
+balloon, floating	t::test	50	DESCRIPTION
+balloon, gas-filled, helium	t::test	50	DESCRIPTION
+balloon, light	t::test	50	DESCRIPTION
+deuterium	t::test	26	DESCRIPTION
+head2	t::test	61	DESCRIPTION
+helium	t::test	50	DESCRIPTION
+hydrogen	t::test	26	DESCRIPTION
+protium	t::test	26	DESCRIPTION
+random	t::test	14	DESCRIPTION
+random	t::test	50	DESCRIPTION
+synopsis	t::test	5	
+tritium	t::test	26	DESCRIPTION
+verbatim	t::test	17	DESCRIPTION

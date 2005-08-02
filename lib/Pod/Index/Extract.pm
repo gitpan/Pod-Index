@@ -1,7 +1,7 @@
 package Pod::Index::Extract;
 
 use 5.008;
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 use strict;
 use warnings;
@@ -128,13 +128,17 @@ This module is a subclass of L<Pod::Parser>. It outputs POD without any
 transformation; however, it only outputs the POD that is "in scope" as
 defined in L<Pod::Index>.
 
-To use this module, first you need to position a filehandle at the beginning
-of the desired scope; then call C<parse_from_filehandle> with that filehandle
-as for input. It will just print out the POD until it reaches the end of the
-scope, and then it will jump to the end of the file.
+To use this module, you first need to position a filehandle at the beginning of
+the desired scope, and then call C<parse_from_filehandle> with that filehandle
+for input. It will just print the POD until it reaches the end of the
+scope, after which it will jump to the end of the file.
 
 If the scope starts with an C<=item>, it will wrap it with an C<=over> and 
 a C<=back>, so it can be used as valid POD in isolation.
+
+=head1 VERSION
+
+0.11
 
 =head1 SEE ALSO
 

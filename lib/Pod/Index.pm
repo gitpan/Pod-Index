@@ -1,6 +1,6 @@
 package Pod::Index;
 
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 use strict;
 use warnings;
@@ -12,7 +12,7 @@ __END__
 
 =head1 NAME
 
-Pod::Index - Create and index PODs using XE<lt>> entries.
+Pod::Index - Index and search PODs using XE<lt>> entries.
 
 =head1 SYNOPSYS
 
@@ -43,14 +43,13 @@ Pod::Index - Create and index PODs using XE<lt>> entries.
 
 =head1 DESCRIPTION
 
-The Pod-Index distributions includes various modules for indexing and
-searching POD that is marked appropriately with XE<lt>> POD codes.
+The Pod-Index distribution includes various modules for indexing and
+searching POD that is appropriately marked with XE<lt>> POD codes.
 
-NOTE: this is the first version, published for experimental purposes, so some
-of the interfaces and file formats may still change slightly in future
-versions.
+NOTE: this is an early version, published for experimental purposes, so some
+of the interfaces and file formats may change slightly in future versions.
 
-L<Pod::Index>, as a module, does nothing. Everything is done by
+C<Pod::Index>, as a module, does nothing. Everything is done by
 L<Pod::Index::Builder>, L<Pod::Index::Search>, and other helper modules.
 
 This document discusses some of the general issues with POD indexing;
@@ -133,7 +132,7 @@ the possible exception of EE<lt>>).
 
 =item * 
 
-It should be in lowercase, unless caps all required due to case-sensitivity
+It should be in lowercase, unless caps are required due to case-sensitivity
 or correctness.
 
 =item * 
@@ -167,10 +166,15 @@ error to have XE<lt>whatever> appear twice in the same file.
 
 =back
 
+=head1 VERSION
+
+0.11
+
 =head1 SEE ALSO
 
 L<Pod::Index::Builder>,
 L<Pod::Index::Search>,
+L<Pod::Index::Entry>,
 L<perlpod>
 
 =head1 AUTHOR

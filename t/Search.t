@@ -28,7 +28,7 @@ for my $res (@results) {
     isa_ok($res, 'Pod::Index::Entry');
     my $exp = shift @expected;
     is($res->line, $exp->{line}, "line=$exp->{line}");
-    is($res->podname, $exp->{podname}, "podname=$exp->{podname}");
+    is($res->filename, $exp->{podname}, "podname=$exp->{podname}");
     is($res->pod, $exp->{pod}, "pod ok");
 }
 
@@ -50,10 +50,12 @@ POD
 
 =item helium
 X<helium>
-X<ballon, floating>
+X<balloon, floating>
+X<balloon, light>
+X<balloon, gas-filled, helium>
 X<random>
 
-Helium is used for filling ballons.
+Helium is used for filling balloons.
 
 =back
 
@@ -92,9 +94,10 @@ heavy water
 POD
 
         ###############################
-        { line => 59, podname => 't/test.pod', pod => <<POD },
+        { line => 61, podname => 't/test.pod', pod => <<POD },
 =head2 HEAD2
 X<head2>
+X<balloon>
 
 This is to see if the head2 block is selected correctly.
 

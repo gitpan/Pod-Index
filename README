@@ -1,12 +1,11 @@
-Pod::Index version 0.10
+Pod::Index version 0.11
 =======================
 
 The Pod-Index distributions includes various modules for indexing and
 searching POD that is marked appropriately with X<> POD codes.
 
-NOTE: this is the first version, published for experimental purposes, so some
-of the interfaces and file formats may still change slightly in future
-versions.
+NOTE: this is an early version, published for experimental purposes, so some of
+the interfaces and file formats may change slightly in future versions.
 
 INSTALLATION
 

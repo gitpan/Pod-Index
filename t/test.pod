@@ -49,15 +49,18 @@ heavy water
 
 =item helium
 X<helium>
-X<ballon, floating>
+X<balloon, floating>
+X<balloon, light>
+X<balloon, gas-filled, helium>
 X<random>
 
-Helium is used for filling ballons.
+Helium is used for filling balloons.
 
 =back
 
 =head2 HEAD2
 X<head2>
+X<balloon>
 
 This is to see if the head2 block is selected correctly.
 

@@ -1,11 +1,11 @@
 package Pod::Index::Search;
 
 use 5.008;
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 use strict;
 use warnings;
-use Search::Dict qw(look);
+use Search::Dict ();
 use Pod::Index::Entry;
 use Carp qw(croak);
 
@@ -28,37 +28,74 @@ sub new {
     }
 
     $self->{start} = tell $self->{fh};
-    $self->{filemap} ||= sub { $_[0] };
+    $self->{filemap} ||= sub { 
+        my ($podname) = @_;
+        $podname =~ s/::/\//g;
+        "$podname.pod"
+    };
 
     return $self;
+}
+
+sub subtopics {
+    my ($self, $keyword, %args) = @_;
+
+    croak "need a keyword " unless defined $keyword;
+    my $fh = $self->{fh};
+
+    $self->look($keyword);
+
+    my $re_filter = qr/^\Q$keyword\E/;
+    my $re_select = $args{deep} ?  qr/^(\Q$keyword\E,.*)/
+        : qr/^(\Q$keyword\E,[^,]*)/;
+
+    local $_;
+    my @ret;
+    my %seen;
+    while (<$fh>) {
+        my ($topic) = split /\t/;
+        last unless $topic =~ $re_filter;
+        
+        if ($topic =~ $re_select and not $seen{$1}++) {
+            push @ret, $1;
+        }
+    }
+    return @ret;
+}
+
+# hack to make 'look' skip everything before __DATA__:
+# everything before start always compares negatively
+sub look {
+    my ($self, $keyword) = @_;
+
+    my $fh = $self->{fh};
+    my $start = $self->{start};
+    Search::Dict::look($fh, $keyword, {
+        comp => sub { 
+            tell($fh) <= $start ? -1 : $_[0] cmp $_[1];
+        },
+    });
 }
 
 sub search {
     my ($self, $keyword) = @_;
 
     croak "need a keyword " unless defined $keyword;
-    my $fh      = $self->{fh};
+    my $fh = $self->{fh};
 
-    # hack to make 'look' skip everything before __DATA__:
-    # everything before start always compares negatively
-    my $start = $self->{start};
-    look($fh, $keyword, {
-        comp => sub { 
-            tell($fh) <= $start ? -1 : $_[0] cmp $_[1];
-        },
-    });
+    $self->look($keyword);
 
     local $_;
     my @ret;
     while (<$fh>) {
         chomp;
-        my ($entry, $pos) = split /\t/;
+        my ($entry, $podname, $line, $context) = split /\t/;
         last unless $entry eq $keyword;
-        my ($file, $line) = split /:/, $pos;
         push @ret, Pod::Index::Entry->new(
-            podname  => $file, 
+            podname  => $podname, 
             line     => $line,
-            filename => $self->{filemap}($file),
+            filename => $self->{filemap}($podname),
+            context  => $context,
         );
     }
     return @ret;
@@ -79,14 +116,30 @@ Pod::Index::Search - Search for keywords in an indexed pod
 
     my $q = Pod::Index::Search->new;
 
-    $q->search('getprotobyname');
+    my @results = $q->search('getprotobyname');
 
-    for my $e ($q->entries) {
-        printf "%s\t%s\n", $e->podname, $e->line;
-        print $e->pod;
+    for my $r (@results) {
+        printf "%s\t%s\n", $r->podname, $r->line;
+        print $r->pod;
     }
 
+    my @subtopics = $q->subtopics('operator');
+
 =head1 DESCRIPTION
+
+This module searches an index created by L<Pod::Index::Builder>. Search results
+are returned as L<Pod::Index::Entry> objects.
+
+It is also possible to search for subtopics for a keyword. For example, a
+search for "operator" might return things like
+
+    operator, conditional
+    operator, filetest
+    operator, logical
+    operator, precedence
+    operator, relational
+
+The subtopics returned are simple strings.
 
 =head1 METHODS
 
@@ -116,12 +169,10 @@ example might be:
 
     sub {
         my $podname = shift;
-        return "/usr/lib/perl5/5.8.7/pod/$podname";
+        return "/usr/lib/perl5/5.8.7/pod/$podname.pod";
     }
 
-The podname is a relative pathname to an @INC directory, such as
-F<Data/Dumper.pm>. The slashes are used as delimiters regardless of the
-platform (see L<perlfunc/require>).
+The podname is in colon-delimited Perl package syntax.
 
 =back
 
@@ -130,11 +181,23 @@ platform (see L<perlfunc/require>).
 Do the actual search in the index.  Returns a list of search results, as
 L<Pod::Index::Entry> objects.
 
+=item subtopics($keyword, %options)
+
+    my @topics = $q->subtopics('operator');
+    my @topics = $q->subtopics('operator', deep => 1);
+
+Lists the subtopics for a given keyword. If C<deep> is given, it includes
+all subtopics; otherwise, only the first level of subtopics is included.
+
 =back
+
+=head1 VERSION
+
+0.11
 
 =head1 SEE ALSO
 
-L<Pod::Index::Entry>
+L<Pod::Index::Entry>, L<Pod::Index::Builder>
 
 =head1 AUTHOR
 

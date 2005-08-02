@@ -20,3 +20,4 @@ open my $fh_exp, "<", "t/test.txt" or die;
 my $expected = do { local $/; <$fh_exp> };
 
 is($got, $expected, "index ok");
+#use Data::Dumper; print Dumper $p->pod_index;
