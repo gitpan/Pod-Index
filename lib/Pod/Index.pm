@@ -1,6 +1,6 @@
 package Pod::Index;
 
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 use strict;
 use warnings;
@@ -14,7 +14,7 @@ __END__
 
 Pod::Index - Index and search PODs using XE<lt>> entries.
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
     ### to create an index:
     use Pod::Index::Builder;
@@ -25,7 +25,7 @@ Pod::Index - Index and search PODs using XE<lt>> entries.
     }
 
     $p->print_index("index.txt");
-    
+
 
     ### to search for a keyword in the index:
     use Pod::Index::Search;
@@ -45,9 +45,6 @@ Pod::Index - Index and search PODs using XE<lt>> entries.
 
 The Pod-Index distribution includes various modules for indexing and
 searching POD that is appropriately marked with XE<lt>> POD codes.
-
-NOTE: this is an early version, published for experimental purposes, so some
-of the interfaces and file formats may change slightly in future versions.
 
 C<Pod::Index>, as a module, does nothing. Everything is done by
 L<Pod::Index::Builder>, L<Pod::Index::Search>, and other helper modules.
@@ -168,7 +165,7 @@ error to have XE<lt>whatever> appear twice in the same file.
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 SEE ALSO
 

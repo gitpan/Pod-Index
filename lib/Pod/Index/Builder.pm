@@ -1,7 +1,7 @@
 package Pod::Index::Builder;
 
 use 5.008;
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 use strict;
 use warnings;
@@ -72,13 +72,14 @@ sub add_entry {
     $context =~ s/\n.*//s;
 
     my $entry = Pod::Index::Entry->new(
+        keyword  => $keyword,
         filename => $filename,
         podname  => $podname,
         line     => $line,
         context  => $context,
     );
 
-    push @{$self->{pi_pod_index}{$keyword}}, $entry;
+    push @{$self->{pi_pod_index}{lc $keyword}}, $entry;
 }
 
 sub print_index {
@@ -96,9 +97,14 @@ sub print_index {
 
     # print out the index
     my $idx = $self->pod_index;
-    for my $key (sort keys %$idx) {
+    for my $key (
+        sort { 
+            $a cmp $b 
+            || $idx->{$a}{keyword} cmp $idx->{$b}{keyword}
+        } keys %$idx
+    ) {
         for my $entry (sort {$a->{line} <=> $b->{line} } @{$idx->{$key}}) {
-            print $fh join("\t", $key, @$entry{qw(podname line context)}), "\n";
+            print $fh join("\t", @$entry{qw(keyword podname line context)}), "\n";
         }
     }
 }
@@ -111,7 +117,7 @@ __END__
 
 Pod::Index::Builder - Build a pod index
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
     use Pod::Index::Builder;
 
@@ -136,8 +142,8 @@ L<Pod::Index::Search>.
 =item pod_index
 
 Retrieves the index as a hashref. The hash keys are the keywords contained in
-the XE<lt>> tags; the values are array references of L<Pod::Index::Entry> 
-objects.
+the XE<lt>> tags, I<normalized to lowercase>; the values are array references
+of L<Pod::Index::Entry> objects.
 
 =item print_index
 
@@ -145,24 +151,26 @@ objects.
     $parser->print_index($filename);
     $parser->print_index();
 
-Prints the index to the given ouput filename or filehandle (or STDOUT by
+Prints the index to the given output filename or filehandle (or STDOUT by
 default). The format is tab-delimited, with the following columns:
 
-    1) key name
+    1) keyword
     2) podname 
     3) line number
     4) context (title of section containing this entry)
+
+The index is sorted by keyword in a case-insensitive way.
 
 =back
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 SEE ALSO
 
 L<Pod::Index>,
-L<Pod::Entry>,
+L<Pod::Index::Entry>,
 L<Pod::Index::Search>,
 L<Pod::Parser>,
 L<perlpod>

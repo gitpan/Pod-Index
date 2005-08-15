@@ -1,7 +1,7 @@
 package Pod::Index::Extract;
 
 use 5.008;
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 use strict;
 use warnings;
@@ -114,7 +114,7 @@ __END__
 
 Pod::Index::Extract - Extracts a "pod scope"
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
     use Pod::Index::Extract;
 
@@ -138,7 +138,7 @@ a C<=back>, so it can be used as valid POD in isolation.
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 SEE ALSO
 

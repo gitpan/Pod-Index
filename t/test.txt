@@ -11,4 +11,7 @@ random	t::test	14	DESCRIPTION
 random	t::test	50	DESCRIPTION
 synopsis	t::test	5	
 tritium	t::test	26	DESCRIPTION
+Tritium	t::test	71	
+tritium, clocks	t::test	71	
+Tritium, leaks	t::test	71	
 verbatim	t::test	17	DESCRIPTION

@@ -86,13 +86,13 @@ For example,
 
 outputs something like this:
 
-    package perlindex;
-    1;
-    __DATA__
-    !	perlop.pod:207
-    !=	perlop.pod:429
-    !~	perlop.pod:242
-    "	perlop.pod:932
+        package perlindex;
+        1;
+        __DATA__
+        !	perlsyn	116	DESCRIPTION
+        !	perlop	207	Symbolic Unary Operators
+        !=	perlop	436	Equality Operators
+        !~	perlop	242	DESCRIPTION
 
 This is used so that an index can be placed in @INC and found easily (See
 L<Pod::Index::Search>).

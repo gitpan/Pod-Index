@@ -11,6 +11,7 @@ perldoc-k.cgi
 podindex
 README
 t/Builder.t
+t/nocase.t
 t/pod.t
 t/Search.t
 t/subtopics.t

@@ -12,6 +12,7 @@ my $cgi = CGI->new;
 print $cgi->header;
 
 my $keyword = $cgi->param('keyword');
+my $nocase  = $cgi->param('nocase');
 
 my $pod;
 my $err;
@@ -24,6 +25,7 @@ if (defined $keyword) {
     *STDOUT = $fh_out;
     *STDERR = $fh_err;
     push @ARGV, qw(-MPod::Perldoc::ToHTML -T -k), $keyword;
+    push @ARGV, '-i' if $nocase;
     eval { Pod::Perldoc->run() };
     $err .= $@;
     ($pod) = $out =~ /<body.*?>(.*)<\/body>/s;
@@ -32,7 +34,10 @@ if (defined $keyword) {
 
 my $tt = Template->new;
 $tt->process(\*DATA, { 
-    pod => $pod, err => $err, keyword => $keyword,
+    pod         => $pod, 
+    err         => $err, 
+    keyword     => $keyword,
+    nocase      => $nocase,
     script_name => $0,
 }) or die;
 
@@ -56,8 +61,9 @@ __DATA__
 <div id="header"><a href="/">POD Indexing Project</a></div>
 <h1><i>perldoc -k</i> demo</h1>
 <form action="/[% script_name %]">
-Keyword to search: <input name="keyword">
+Keyword to search: <input name="keyword" value=[% keyword | html %]>
 <input type="submit">
+<br><input type="checkbox" id="nocase" name="nocase" value="1" [% 'checked="checked"' IF nocase %]> <label for="nocase">Case-insensitive</label>
 </form>
 <hr>
 

@@ -1,7 +1,7 @@
 package Pod::Index::Search;
 
 use 5.008;
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 use strict;
 use warnings;
@@ -45,9 +45,12 @@ sub subtopics {
 
     $self->look($keyword);
 
-    my $re_filter = qr/^\Q$keyword\E/;
-    my $re_select = $args{deep} ?  qr/^(\Q$keyword\E,.*)/
-        : qr/^(\Q$keyword\E,[^,]*)/;
+    my $i = $self->{nocase} ? 'i' : '';
+
+    my $re_filter = qr/^\Q$keyword\E/i;
+    my $re_select = $args{deep} 
+        ? qr/^((?$i)\Q$keyword\E,.*)/
+        : qr/^((?$i)\Q$keyword\E,[^,]*)/;
 
     local $_;
     my @ret;
@@ -68,12 +71,16 @@ sub subtopics {
 sub look {
     my ($self, $keyword) = @_;
 
-    my $fh = $self->{fh};
+    my $fh    = $self->{fh};
     my $start = $self->{start};
+
+    # the search is case-insensitive (fold => 1), but the results are filtered
+    # later if the user wanted it case-sensitive
     Search::Dict::look($fh, $keyword, {
         comp => sub { 
             tell($fh) <= $start ? -1 : $_[0] cmp $_[1];
         },
+        fold => 1,
     });
 }
 
@@ -87,11 +94,16 @@ sub search {
 
     local $_;
     my @ret;
+    my $keyword_lc = lc $keyword;
+    my %seen;
     while (<$fh>) {
         chomp;
         my ($entry, $podname, $line, $context) = split /\t/;
-        last unless $entry eq $keyword;
+        last unless lc $entry eq $keyword_lc;
+        next if !$self->{nocase} and $entry ne $keyword;
+        next if $seen{"$podname\t$line"}++;
         push @ret, Pod::Index::Entry->new(
+            keyword  => $entry,
             podname  => $podname, 
             line     => $line,
             filename => $self->{filemap}($podname),
@@ -110,7 +122,7 @@ __END__
 
 Pod::Index::Search - Search for keywords in an indexed pod
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
     use Pod::Index::Search;
 
@@ -153,16 +165,16 @@ Create a new search object. Possible arguments are:
 
 =over
 
-=item fh
+=item C<fh>
 
 The filehandle of the index to use. If omitted, C<perlindex::DATA> is used.
 
-=item filename
+=item C<filename>
 
-The filename of the index to use. Note that you can specify either fh or
+The filename of the index to use. Note that you can specify either C<fh> or
 filename, but not both.
 
-=item filemap
+=item C<filemap>
 
 A subroutine reference that takes a podname and returns a filename. A simple
 example might be:
@@ -173,6 +185,10 @@ example might be:
     }
 
 The podname is in colon-delimited Perl package syntax.
+
+=item C<nocase>
+
+If true, the search will be case-insensitive.
 
 =back
 
@@ -193,7 +209,7 @@ all subtopics; otherwise, only the first level of subtopics is included.
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 SEE ALSO
 

@@ -69,6 +69,9 @@ This is to see if the head2 block is selected correctly.
 this paragraph should be included.
 
 =head1 SEE ALSO
+X<Tritium>
+X<tritium, clocks>
+X<Tritium, leaks>
 
 Stuff
 

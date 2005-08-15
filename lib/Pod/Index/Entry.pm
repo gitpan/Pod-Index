@@ -1,7 +1,7 @@
 package Pod::Index::Entry;
 
 use 5.008;
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 use strict;
 use warnings;
@@ -19,6 +19,7 @@ sub podname  { shift->{podname}  }
 sub line     { shift->{line}     }
 sub filename { shift->{filename} }
 sub context  { shift->{context} }
+sub keyword  { shift->{keyword} }
 
 sub pod {
     my ($self) = @_;
@@ -47,12 +48,13 @@ sub pod {
 
 Pod::Index::Entry - Represents Pod search result
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
     use Pod::Index::Entry;
 
     my $entry =  Pod::Index::Entry->new(
-        podname  => 'perlobj'
+        keyword  => 'constructors',
+        podname  => 'perlobj',
         line     => 42,
         filename => '/usr/lib/perl5/5.8.7/pod/perlobj.pod',
         context  => 'Using POD',
@@ -63,6 +65,7 @@ Pod::Index::Entry - Represents Pod search result
     my $filename = $entry->filename;
     my $line     = $entry->line;
     my $context  = $entry->context;
+    my $keyword  = $entry->keyword;
 
     # extract the POD for this entry
     my $pod      = $entry->pod;
@@ -118,13 +121,13 @@ as given to the constructor.
 
 Extracts the POD for the scope of the entry from $self->filename, beginning at
 $self->line. For a definition of I<scope>, see L<Pod::Index>. The POD
-extraction is delegated to the L<Pod::Extract> module.
+extraction is delegated to the L<Pod::Index::Extract> module.
 
 =back
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 SEE ALSO
 
