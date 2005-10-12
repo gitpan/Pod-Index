@@ -61,7 +61,7 @@ __DATA__
 <div id="header"><a href="/">POD Indexing Project</a></div>
 <h1><i>perldoc -k</i> demo</h1>
 <form action="/[% script_name %]">
-Keyword to search: <input name="keyword" value=[% keyword | html %]>
+Keyword to search: <input name="keyword" value="[% keyword | html %]">
 <input type="submit">
 <br><input type="checkbox" id="nocase" name="nocase" value="1" [% 'checked="checked"' IF nocase %]> <label for="nocase">Case-insensitive</label>
 </form>

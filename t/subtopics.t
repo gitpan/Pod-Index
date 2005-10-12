@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
+use File::Spec::Functions;
 
 #plan 'no_plan';
 plan tests => 4;
@@ -8,7 +9,7 @@ plan tests => 4;
 use_ok('Pod::Index::Search');
 
 my $q = Pod::Index::Search->new(
-    filename => 't/test.txt',
+    filename => catfile('t', 'test.txt'),
 );
 
 isa_ok($q, 'Pod::Index::Search');

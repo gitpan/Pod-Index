@@ -1,7 +1,7 @@
 package Pod::Index::Builder;
 
 use 5.008;
-$VERSION = '0.12';
+$VERSION = '0.13';
 
 use strict;
 use warnings;
@@ -100,10 +100,15 @@ sub print_index {
     for my $key (
         sort { 
             $a cmp $b 
-            || $idx->{$a}{keyword} cmp $idx->{$b}{keyword}
+            or $idx->{$a}{keyword} cmp $idx->{$b}{keyword}
         } keys %$idx
     ) {
-        for my $entry (sort {$a->{line} <=> $b->{line} } @{$idx->{$key}}) {
+        for my $entry (
+            sort {
+                $a->{podname} cmp $b->{podname}
+                or $a->{line} <=> $b->{line} 
+            } @{$idx->{$key}}
+        ) {
             print $fh join("\t", @$entry{qw(keyword podname line context)}), "\n";
         }
     }
@@ -165,7 +170,7 @@ The index is sorted by keyword in a case-insensitive way.
 
 =head1 VERSION
 
-0.12
+0.13
 
 =head1 SEE ALSO
 

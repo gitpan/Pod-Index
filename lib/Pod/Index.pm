@@ -1,6 +1,6 @@
 package Pod::Index;
 
-$VERSION = '0.12';
+$VERSION = '0.13';
 
 use strict;
 use warnings;
@@ -165,7 +165,7 @@ error to have XE<lt>whatever> appear twice in the same file.
 
 =head1 VERSION
 
-0.12
+0.13
 
 =head1 SEE ALSO
 

@@ -1,5 +1,9 @@
 Revision history for Pod-Index
 
+0.13  2005-10-12
+        - Sort index by keyword,podname,line instead of keyword,line.
+        - Use File::Spec in tests instead of hardcoded slashes.
+
 0.12  2005-08-14
         - Case-insensitive search option. NOTE: as a consequence, indexes 
           built with previous versions are not likely to work with this one.

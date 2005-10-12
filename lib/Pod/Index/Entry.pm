@@ -1,7 +1,7 @@
 package Pod::Index::Entry;
 
 use 5.008;
-$VERSION = '0.12';
+$VERSION = '0.13';
 
 use strict;
 use warnings;
@@ -127,7 +127,7 @@ extraction is delegated to the L<Pod::Index::Extract> module.
 
 =head1 VERSION
 
-0.12
+0.13
 
 =head1 SEE ALSO
 

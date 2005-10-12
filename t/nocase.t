@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
+use File::Spec::Functions;
 
 plan 'no_plan';
 #plan tests => 4;
@@ -12,7 +13,7 @@ my ($q, @results);
 ####### CASE-SENSITIVE ##########
 
 $q = Pod::Index::Search->new(
-    filename => 't/test.txt',
+    filename => catfile('t', 'test.txt'),
 );
 
 @results = $q->search('tritium');
@@ -32,7 +33,7 @@ is( scalar @results, 1, 'Tritium subtopics (case)');
 ####### CASE-INSENSITIVE ##########
 
 $q = Pod::Index::Search->new(
-    filename => 't/test.txt',
+    filename => catfile('t', 'test.txt'),
     nocase   => 1,
 );
 

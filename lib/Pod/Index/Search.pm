@@ -1,7 +1,7 @@
 package Pod::Index::Search;
 
 use 5.008;
-$VERSION = '0.12';
+$VERSION = '0.13';
 
 use strict;
 use warnings;
@@ -209,7 +209,7 @@ all subtopics; otherwise, only the first level of subtopics is included.
 
 =head1 VERSION
 
-0.12
+0.13
 
 =head1 SEE ALSO
 

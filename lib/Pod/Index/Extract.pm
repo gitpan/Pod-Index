@@ -1,7 +1,7 @@
 package Pod::Index::Extract;
 
 use 5.008;
-$VERSION = '0.12';
+$VERSION = '0.13';
 
 use strict;
 use warnings;
@@ -138,7 +138,7 @@ a C<=back>, so it can be used as valid POD in isolation.
 
 =head1 VERSION
 
-0.12
+0.13
 
 =head1 SEE ALSO
 
