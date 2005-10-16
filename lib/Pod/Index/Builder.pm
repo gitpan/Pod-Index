@@ -1,13 +1,14 @@
 package Pod::Index::Builder;
 
 use 5.008;
-$VERSION = '0.13';
+$VERSION = '0.14';
 
 use strict;
 use warnings;
 
 use base qw(Pod::Parser);
 use Pod::Index::Entry;
+use File::Spec;
 
 ####### Pod::Parser overriden methods
 
@@ -63,9 +64,7 @@ sub add_entry {
 
     my ($filename, $line, $breadcrumbs) = @{$self->{pi_pos}};
 
-    my $podname = ($filename); # XXX
-    $podname =~ s/\//::/g;
-    $podname =~ s/\.\w+$//;
+    my $podname = $self->path2package($filename);
 
     my $context = $breadcrumbs->[-1];
     $context = '' unless defined $context;
@@ -80,6 +79,21 @@ sub add_entry {
     );
 
     push @{$self->{pi_pod_index}{lc $keyword}}, $entry;
+}
+
+sub path2package {
+    my ($self, $pathname) = @_;
+
+    my $relname = File::Spec->abs2rel($pathname, $self->{pi_base});
+
+    my ($volume, $dirstring, $file) = File::Spec->splitpath($relname);
+    my @dirs = File::Spec->splitdir($dirstring);
+
+    pop @dirs if ($dirs[-1] eq ''); # in case there was a trailing slash
+    $file =~ s/\.\w+$//;
+
+    my $package = join('::',@dirs,$file);
+    return $package;
 }
 
 sub print_index {
@@ -126,7 +140,9 @@ Pod::Index::Builder - Build a pod index
 
     use Pod::Index::Builder;
 
-    my $p = Pod::Index::Builder->new;
+    my $p = Pod::Index::Builder->new(
+        pi_base => $base_path,
+    );
     for my $file (@ARGV) {
         $p->parse_from_file($file);
     }
@@ -143,6 +159,15 @@ L<Pod::Index::Search>.
 =head1 METHODS
 
 =over
+
+=item new
+
+The constructor, inherited from L<Pod::Parser>. The only optional argument
+that X<Pod::Index> cares about is C<pi_base>. If given, it is used as a base
+when converting pathnames to package names. For example, if C<pi_path> = "lib",
+the filename F<lib/Pod/Index.pm> will turn into C<Pod::Index>, instead of
+the undesirable C<lib::Pod::Index>.
+
 
 =item pod_index
 
@@ -170,7 +195,7 @@ The index is sorted by keyword in a case-insensitive way.
 
 =head1 VERSION
 
-0.13
+0.14
 
 =head1 SEE ALSO
 

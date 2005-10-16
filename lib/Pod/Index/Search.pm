@@ -1,13 +1,14 @@
 package Pod::Index::Search;
 
 use 5.008;
-$VERSION = '0.13';
+$VERSION = '0.14';
 
 use strict;
 use warnings;
 use Search::Dict ();
 use Pod::Index::Entry;
 use Carp qw(croak);
+use File::Spec::Functions;
 
 sub new {
     my ($class, %args) = @_;
@@ -29,9 +30,14 @@ sub new {
 
     $self->{start} = tell $self->{fh};
     $self->{filemap} ||= sub { 
-        my ($podname) = @_;
-        $podname =~ s/::/\//g;
-        "$podname.pod"
+        my ($podname)    = @_;
+        my @path_elems   = split /::/, $podname;
+        for my $inc (@INC) {
+            my $file = catfile($inc, @path_elems);
+            return "$file.pod" if -e "$file.pod";
+            return "$file.pm"  if -e "$file.pm";
+        }
+        return undef;
     };
 
     return $self;
@@ -186,6 +192,9 @@ example might be:
 
 The podname is in colon-delimited Perl package syntax.
 
+The default C<filemap> returns the first file in @INC that seems to have the 
+proper documentation (either a .pod or .pm file).
+
 =item C<nocase>
 
 If true, the search will be case-insensitive.
@@ -209,7 +218,7 @@ all subtopics; otherwise, only the first level of subtopics is included.
 
 =head1 VERSION
 
-0.13
+0.14
 
 =head1 SEE ALSO
 

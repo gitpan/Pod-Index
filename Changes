@@ -1,5 +1,10 @@
 Revision history for Pod-Index
 
+0.14  2005-10-15
+        - Improved portability, particularly for the tests.
+        - Make sure tests can run from any directory.
+        - Updated default filemap to look at @INC.
+
 0.13  2005-10-12
         - Sort index by keyword,podname,line instead of keyword,line.
         - Use File::Spec in tests instead of hardcoded slashes.
